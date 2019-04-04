@@ -76,6 +76,13 @@ public class FripperController : MonoBehaviour
                         SetAngle(defaultAngle);
                     }
                 }
+                else if (t.position.x > Screen.width * 0.5f)
+                {
+                    if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                    {
+                        SetAngle(defaultAngle);
+                    }
+                }
             }
 
 
@@ -88,6 +95,13 @@ public class FripperController : MonoBehaviour
                         SetAngle(flickAngle);
                     }
                     else if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                    {
+                        SetAngle(defaultAngle);
+                    }
+                }
+                else if(t.position.x <= Screen.width * 0.5f)
+                {
+                    if (Input.GetTouch(i).phase == TouchPhase.Ended)
                     {
                         SetAngle(defaultAngle);
                     }
