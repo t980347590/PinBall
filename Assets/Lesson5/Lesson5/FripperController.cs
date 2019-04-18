@@ -8,7 +8,8 @@ public class FripperController : MonoBehaviour
     float defaultAngle = 20f;
     float flickAngle = -20f;
 
-
+    bool leftbool;
+    bool rightbool;
 
 
 
@@ -27,85 +28,105 @@ public class FripperController : MonoBehaviour
     {
         myHingeJoint = GetComponent<HingeJoint>();
         SetAngle(defaultAngle);
+
+        leftbool = false;
+        rightbool = false;
+
+    }
+
+
+
+    bool DetectTouches(ref bool isLeftTouched, ref bool isRightTouched)
+    {
+        Touch[] touches = Input.touches;
+        if (touches.Length < 1)
+            return false;
+
+        foreach (var touch in touches)
+        {
+            if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
+            {
+                if (touch.position.x > Screen.width / 2)
+                {
+                    isRightTouched = true;
+                }
+                else
+                {
+                    isLeftTouched = true;
+                }
+            }
+        }
+        return true;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow) && tag == "LeftFripperTag")
+
+
+        leftbool = false;
+        rightbool = false;
+
+        if (DetectTouches(ref leftbool, ref rightbool))
         {
-            SetAngle(flickAngle);
-
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow) && tag == "RightFripperTag")
-        {
-            SetAngle(flickAngle);
-        }
-        if (Input.GetKeyUp(KeyCode.LeftArrow) && tag == "LeftFripperTag")
-        {
-            SetAngle(defaultAngle);
-
-        }
-        if (Input.GetKeyUp(KeyCode.RightArrow) && tag == "RightFripperTag")
-        {
-            SetAngle(defaultAngle);
-        }
-
-
-        //以下発展課題
-
-
-        for (int i = 0; i < Input.touchCount; ++i)
-        {
-
-            Touch t = Input.GetTouch(i);
-
-
-
-
 
             if (tag == "LeftFripperTag")
             {
-                if (t.position.x <= Screen.width * 0.5f)
+                if (leftbool)
                 {
-                    if (Input.GetTouch(i).phase == TouchPhase.Began)
-                    {
-                        SetAngle(flickAngle);
-                    }
-                    else if (Input.GetTouch(i).phase == TouchPhase.Ended)
-                    {
-                        SetAngle(defaultAngle);
-                    }
+                    SetAngle(flickAngle);
                 }
-                else if (t.position.x > Screen.width * 0.5f)
+                else
                 {
-                    if (Input.GetTouch(i).phase == TouchPhase.Ended)
-                    {
-                        SetAngle(defaultAngle);
-                    }
+                    SetAngle(defaultAngle);
                 }
-            }
 
+            }
 
             if (tag == "RightFripperTag")
             {
-                if (t.position.x > Screen.width * 0.5f)
+                if (rightbool)
                 {
-                    if (Input.GetTouch(i).phase == TouchPhase.Began)
-                    {
-                        SetAngle(flickAngle);
-                    }
-                    else if (Input.GetTouch(i).phase == TouchPhase.Ended)
-                    {
-                        SetAngle(defaultAngle);
-                    }
+                    SetAngle(flickAngle);
                 }
-                else if(t.position.x <= Screen.width * 0.5f)
+                else
                 {
-                    if (Input.GetTouch(i).phase == TouchPhase.Ended)
-                    {
-                        SetAngle(defaultAngle);
-                    }
+                    SetAngle(defaultAngle);
                 }
+            }
+
+        }
+
+
+
+        if (tag == "LeftFripperTag")
+        {
+
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+
+                SetAngle(flickAngle);
+
+            }
+            else if (Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+
+                SetAngle(defaultAngle);
+
+            }
+        }
+
+
+        if (tag == "RightFripperTag")
+        {
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+
+                SetAngle(flickAngle);
+            }
+            else if (Input.GetKeyUp(KeyCode.RightArrow))
+            {
+
+                SetAngle(defaultAngle);
             }
         }
 
@@ -116,6 +137,9 @@ public class FripperController : MonoBehaviour
 
 
     }
+
+
+
 }
 
 
